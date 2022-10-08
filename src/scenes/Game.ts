@@ -117,23 +117,22 @@ export default class GameScene extends Phaser.Scene {
     for(var i = 0; i < gameOptions.mazeHeight; i ++){
       for(var j = 0; j < gameOptions.mazeWidth; j ++){
         if(this.maze[i][j] == 1){
-          let anjay = this.mazeGraphics.fillRect(
-            j * gameOptions.tileSize, 
-            i * gameOptions.tileSize, 
+          let anjay = this.add.rectangle(
+            j * gameOptions.tileSize + 5, 
+            i * gameOptions.tileSize + 5, 
             gameOptions.tileSize, 
-            gameOptions.tileSize
-          );
-          
+            gameOptions.tileSize,
+            0x000000
+          );         
           this.physics.add.existing(anjay);
-          
-          console.log(anjay)
-          this.physics.add.collider(
-            this.player!,
-            anjay,
-            function (bullet, enemy) {
-              console.log("WSWSW")
-            }
-          );
+          if('setVelocity' in anjay.body) {
+            anjay.body.setCollideWorldBounds(true);
+            anjay.body.setImmovable(true)
+          }
+          this.physics.add.collider(this.player!, anjay, (player, wallobj) => {
+            this.player?.handleCollide(wallobj)
+          })
+            
         }
       }
     }
@@ -147,12 +146,12 @@ export default class GameScene extends Phaser.Scene {
       callback: function(){
         if(i > -1){
           self.mazeGraphics.fillStyle(0x00FFDD);
-          self.mazeGraphics.fillRect(
-            path[i].x * gameOptions.tileSize + 1, 
-            path[i].y * gameOptions.tileSize + 1, 
+          self.add.rectangle(
+            path[i].x * gameOptions.tileSize + 5, 
+            path[i].y * gameOptions.tileSize + 5, 
             gameOptions.tileSize - 2, 
-            gameOptions.tileSize - 2);
-          
+            gameOptions.tileSize - 2,
+            0x00FFDD);
           i--;
         }
         else{
