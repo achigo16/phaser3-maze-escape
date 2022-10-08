@@ -19,7 +19,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.displayWidth = 20
     this.displayHeight = 13
     if('setSize' in this.body) {
-      this.body.setSize(50,50, true)
+      this.body.setSize(51,51, true)
     }
     // this.setScale(.2)
     this.setDepth(2)
