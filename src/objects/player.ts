@@ -16,7 +16,12 @@ class Player extends Phaser.GameObjects.Sprite {
 
     scene.physics.world.enableBody(this);
     scene.add.existing(this)
-    this.setScale(.2)
+    this.displayWidth = 20
+    this.displayHeight = 13
+    if('setSize' in this.body) {
+      this.body.setSize(50,50, true)
+    }
+    // this.setScale(.2)
     this.setDepth(1)
     
     if('setVelocity' in this.body) {
@@ -26,6 +31,7 @@ class Player extends Phaser.GameObjects.Sprite {
   }
 
   handleCollide(wallobj:any) {
+    console.log(wallobj.body.width, wallobj.body.height)
     if('setVelocity' in this.body) {
       this.body.setImmovable(false)
     }
@@ -35,21 +41,22 @@ class Player extends Phaser.GameObjects.Sprite {
     const {keys} = gameConfig
 
     if('setVelocity' in this.body) {
-      if(keys.a.isDown) {
+    this.body.setVelocity(0,0)
+    if(keys.a.isDown) {
         // this.body.setVelocity(-150, 0)
-        this.body.setVelocityX(-100)
+        this.body.setVelocityX(-200)
       }
       if(keys.d.isDown) {
-        // this.body.setVelocity(100, 0)
-        this.body.setVelocityX(100)
+        // this.body.setVelocity(200, 0)
+        this.body.setVelocityX(200)
       }
       if(keys.w.isDown) {
-        // this.body.setVelocity(0, -100)
-        this.body.setVelocityY(-100)
+        // this.body.setVelocity(0, -200)
+        this.body.setVelocityY(-200)
       }
       if(keys.s.isDown) {
-        // this.body.setVelocity(0, 100)
-        this.body.setVelocityY(100)
+        // this.body.setVelocity(0, 200)
+        this.body.setVelocityY(200)
       }
     }
 

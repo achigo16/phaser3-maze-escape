@@ -96,8 +96,8 @@ export default class GameScene extends Phaser.Scene {
     easystar.findPath(1, 1, gameOptions.mazeWidth - 2, gameOptions.mazeHeight - 2, function(path:Array<PathType>){
       self.player = new Player({
         scene:self,
-        x: path[path.length-1].x * gameOptions.tileSize + 5,
-        y: path[path.length-1].y * gameOptions.tileSize + 5
+        x: path[path.length-1].x * gameOptions.tileSize + 15,
+        y: path[path.length-1].y * gameOptions.tileSize + 15
       })
       self.drawPath(path, self.player);
       self.drawMaze(posX, posY)
@@ -118,8 +118,8 @@ export default class GameScene extends Phaser.Scene {
       for(var j = 0; j < gameOptions.mazeWidth; j ++){
         if(this.maze[i][j] == 1){
           let anjay = this.add.rectangle(
-            j * gameOptions.tileSize + 5, 
-            i * gameOptions.tileSize + 5, 
+            j * gameOptions.tileSize + 15, 
+            i * gameOptions.tileSize + 15, 
             gameOptions.tileSize, 
             gameOptions.tileSize,
             0x000000
@@ -147,8 +147,8 @@ export default class GameScene extends Phaser.Scene {
         if(i > -1){
           self.mazeGraphics.fillStyle(0x00FFDD);
           self.add.rectangle(
-            path[i].x * gameOptions.tileSize + 5, 
-            path[i].y * gameOptions.tileSize + 5, 
+            path[i].x * gameOptions.tileSize + 15, 
+            path[i].y * gameOptions.tileSize + 15, 
             gameOptions.tileSize - 2, 
             gameOptions.tileSize - 2,
             0x00FFDD);

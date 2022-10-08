@@ -4,7 +4,7 @@ import { GameConfigType } from '../Utility/type';
 const gameOptions = {
   mazeWidth: 21,
   mazeHeight: 31,
-  tileSize: 10
+  tileSize: 30
 }
 
 const gameConfig: GameConfigType = {
@@ -25,7 +25,7 @@ export default {
   physics: {
     default: "arcade",
     arcade: {
-      debug: false,
+      debug: true,
       gravity: false
     }
   },
