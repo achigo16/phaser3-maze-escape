@@ -99,8 +99,8 @@ export default class GameScene extends Phaser.Scene {
         x: path[path.length-1].x * gameOptions.tileSize + 15,
         y: path[path.length-1].y * gameOptions.tileSize + 15
       })
-      self.drawPath(path, self.player);
       self.drawMaze(posX, posY)
+      // self.drawPath(path, self.player);
     }.bind(this));
     easystar.calculate();
 
@@ -125,14 +125,30 @@ export default class GameScene extends Phaser.Scene {
             0x000000
           );         
           this.physics.add.existing(anjay);
+
           if('setVelocity' in anjay.body) {
             anjay.body.setCollideWorldBounds(true);
             anjay.body.setImmovable(true)
           }
+
           this.physics.add.collider(this.player!, anjay, (player, wallobj) => {
             this.player?.handleCollide(wallobj)
           })
             
+        } else {
+          if(i < 100) {
+            console.log(this.maze[i], i)
+            console.log(this.maze[i+1], i+1)
+            let wkwk = this.add.text(j * gameOptions.tileSize + 10, i * gameOptions.tileSize + 10, `${j}`, { color: '#000000' });
+            wkwk.setDepth(1)
+            this.add.rectangle(
+              j * gameOptions.tileSize + 15, 
+              i * gameOptions.tileSize + 15, 
+              gameOptions.tileSize - 10, 
+              gameOptions.tileSize - 10,
+              0xFFFFFF
+            );  
+          }
         }
       }
     }
@@ -149,9 +165,12 @@ export default class GameScene extends Phaser.Scene {
           self.add.rectangle(
             path[i].x * gameOptions.tileSize + 15, 
             path[i].y * gameOptions.tileSize + 15, 
-            gameOptions.tileSize - 2, 
-            gameOptions.tileSize - 2,
-            0x00FFDD);
+            gameOptions.tileSize, 
+            gameOptions.tileSize,
+            0x00FFDD
+          );
+          
+          // self.player?.handleAutoMove(path[i].x * gameOptions.tileSize + 15, path[i].y * gameOptions.tileSize + 15)
           i--;
         }
         else{

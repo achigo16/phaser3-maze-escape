@@ -22,7 +22,7 @@ class Player extends Phaser.GameObjects.Sprite {
       this.body.setSize(50,50, true)
     }
     // this.setScale(.2)
-    this.setDepth(1)
+    this.setDepth(2)
     
     if('setVelocity' in this.body) {
       this.body.setCollideWorldBounds(true);
@@ -31,17 +31,20 @@ class Player extends Phaser.GameObjects.Sprite {
   }
 
   handleCollide(wallobj:any) {
-    console.log(wallobj.body.width, wallobj.body.height)
     if('setVelocity' in this.body) {
       this.body.setImmovable(false)
     }
+  }
+
+  handleAutoMove(x:number,y:number) {
+    this.setPosition(x, y)
   }
 
   update(time: number, delta: number): void {
     const {keys} = gameConfig
 
     if('setVelocity' in this.body) {
-    this.body.setVelocity(0,0)
+    // this.body.setVelocity(0,0)
     if(keys.a.isDown) {
         // this.body.setVelocity(-150, 0)
         this.body.setVelocityX(-200)
