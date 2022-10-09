@@ -99,22 +99,22 @@ export default class GameScene extends Phaser.Scene {
         var isIntersection = false;
 
         if(indexArrItem > 0 && indexArrItem < arr.length - 1) {
-          var numPath = 0;
+          var directPatern = '';
 
           if((arr[indexArrItem - 1] ?? 1) == 0) {
-            numPath += 1;
+            directPatern += 'H';
           }
           if((arr[indexArrItem + 1] ?? 1) == 0) {
-            numPath += 1;
-          }
-          if ((nextArr[indexArrItem] ?? 1) == 0) {
-            numPath += 1;
+            directPatern += 'H';
           }
           if ((prevArr[indexArrItem] ?? 1) == 0) {
-            numPath += 1;
+            directPatern += 'V';
+          }
+          if ((nextArr[indexArrItem] ?? 1) == 0) {
+            directPatern += 'V';
           }
 
-          if(arrItem == 0 && numPath == 3) {
+          if(arrItem == 0 && (directPatern.length == 3 || directPatern.length == 1 || directPatern == 'HV')) {
             // console.log("Intersection Found!", indexArr, indexArrItem)
             isIntersection = true;
           }
