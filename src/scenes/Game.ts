@@ -10,13 +10,14 @@ import Player from '../objects/player';
 export default class GameScene extends Phaser.Scene {
   mazeGraphics:any;
   maze:any;
-  mazeIntersection:any;
+  mazeIntersection:Array<Array<Boolean>>;
   player:Player | null;
   constructor() {
     super('GameScene');
     this.mazeGraphics = null;
     this.maze= [];
     this.player=null;
+    this.mazeIntersection = [];
   }
 
   preload() {
@@ -138,7 +139,7 @@ export default class GameScene extends Phaser.Scene {
         y: path[path.length-1].y * gameOptions.tileSize + 15
       })
       self.drawMaze(posX, posY)
-      self.drawPath(path, self.player);
+      // self.drawPath(path, self.player);
     }.bind(this));
     easystar.calculate();
 
@@ -155,41 +156,72 @@ export default class GameScene extends Phaser.Scene {
     for(var i = 0; i < gameOptions.mazeHeight; i ++){
       for(var j = 0; j < gameOptions.mazeWidth; j ++){
         if(this.maze[i][j] == 1){
-          let anjay = this.add.rectangle(
+          let mazeWall = this.add.rectangle(
             j * gameOptions.tileSize + 15, 
             i * gameOptions.tileSize + 15, 
             gameOptions.tileSize, 
             gameOptions.tileSize,
             0x000000
           );         
-          this.physics.add.existing(anjay);
+          this.physics.add.existing(mazeWall);
 
-          if('setVelocity' in anjay.body) {
-            anjay.body.setCollideWorldBounds(true);
-            anjay.body.setImmovable(true)
+          if('setVelocity' in mazeWall.body) {
+            mazeWall.body.setCollideWorldBounds(true);
+            mazeWall.body.setImmovable(true)
           }
 
-          this.physics.add.collider(this.player!, anjay, (player, wallobj) => {
+          this.physics.add.collider(this.player!, mazeWall, (player, wallobj) => {
             this.player?.handleCollide(wallobj)
           })
             
         } else {
-          if(i < 100) {
-            if(this.mazeIntersection[i][j]) {
-              let wkwk = this.add.text(j * gameOptions.tileSize + 10, i * gameOptions.tileSize + 10, `${j}`, { color: '#000000' });
-              wkwk.setDepth(1)
-              this.add.rectangle(
-                j * gameOptions.tileSize + 15, 
-                i * gameOptions.tileSize + 15, 
-                gameOptions.tileSize - 10, 
-                gameOptions.tileSize - 10,
-                0xFFFFFF
-              );  
+          if(this.mazeIntersection[i][j]) {
+            let txt = this.add.text(j * gameOptions.tileSize + 10, i * gameOptions.tileSize + 10, `${j}`, { color: '#FFFFFF' });
+            txt.setDepth(1)
+            let intersection = this.add.rectangle(
+              j * gameOptions.tileSize + 15, 
+              i * gameOptions.tileSize + 15, 
+              gameOptions.tileSize - 10, 
+              gameOptions.tileSize - 10,
+              0xFF0000
+            ) as any
+
+            this.physics.add.existing(intersection);
+            this.player!.isHitBoundaries = false
+
+            if('setVelocity' in intersection.body) {
+              intersection.body.setCollideWorldBounds(true);
+              intersection.body.setImmovable(true)
             }
-            // console.log(this.maze[i], i)
-            // console.log(this.maze[i+1], i+1)
-            
+
+            this.physics.add.overlap(this.player! , intersection, (player, intersectionObj) => {
+              // this.player?.handleCollide(wallobj)
+              // console.log(player.body.y)
+              if(this.player!.isHitBoundaries === false) {
+                this.physics.moveToObject(this.player!, intersectionObj, 80, 80)
+                // setTimeout(() => {
+                //   player!.isHitBoundaries = true
+                // }, 200);
+                // setTimeout(() => {
+                //   console.log("wkwkwk")
+                //   // player.body.setImmovable(false)
+                //   player.body.setVelocity(0, 0)
+                // }, 1000);
+              }  
+              // if(Math.ceil(player.body.y)+10 > intersectionObj.body.y || Math.ceil(player.body.x)+10 > intersectionObj.body.x) {
+              //   console.log("lebih")
+              // }
+              
+              // this.player?.handleAutoMove(wallobj.body.y, wallobj.body.x)
+            })
           }
+          // this.add.rectangle(
+          //   j * gameOptions.tileSize + 15, 
+          //   i * gameOptions.tileSize + 15, 
+          //   gameOptions.tileSize - 10, 
+          //   gameOptions.tileSize - 10,
+          //   0xFFFFFF
+          // ) 
         }
       }
     }
@@ -211,7 +243,7 @@ export default class GameScene extends Phaser.Scene {
             0x00FFDD
           );
           
-          self.player?.handleAutoMove(path[i].x * gameOptions.tileSize + 15, path[i].y * gameOptions.tileSize + 15)
+          // self.player?.handleAutoMove(path[i].x * gameOptions.tileSize + 15, path[i].y * gameOptions.tileSize + 15)
           i--;
         }
         else{
