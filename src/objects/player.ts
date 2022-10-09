@@ -42,7 +42,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.setPosition(x, y)
   }
 
-  update(time: number, delta: number): void {
+  update(time: number, delta: number, callback:Function): void {
     const {keys} = gameConfig
 
     if('setVelocity' in this.body) {
@@ -50,18 +50,22 @@ class Player extends Phaser.GameObjects.Sprite {
     if(keys.a.isDown) {
         // this.body.setVelocity(-150, 0)
         this.body.setVelocityX(-200)
+        callback()
       }
       if(keys.d.isDown) {
         // this.body.setVelocity(200, 0)
         this.body.setVelocityX(200)
+        callback()
       }
       if(keys.w.isDown) {
         // this.body.setVelocity(0, -200)
         this.body.setVelocityY(-200)
+        callback()
       }
       if(keys.s.isDown) {
         // this.body.setVelocity(0, 200)
         this.body.setVelocityY(200)
+        callback()
       }
     }
 

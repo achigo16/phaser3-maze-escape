@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { GameConfigType } from '../Utility/type';
 
 const gameOptions = {
-  mazeWidth: 7,
+  mazeWidth: 13,
   mazeHeight: 31,
   tileSize: 30
 }
@@ -25,7 +25,7 @@ export default {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
       gravity: false
     }
   },

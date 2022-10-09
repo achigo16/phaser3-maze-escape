@@ -10,14 +10,15 @@ import Player from '../objects/player';
 export default class GameScene extends Phaser.Scene {
   mazeGraphics:any;
   maze:any;
-  mazeIntersection:Array<Array<Boolean>>;
+  mazeIntersection:Array<Array<Boolean>> = [];
   player:Player | null;
+  pressKeyboard: boolean = false;
+  paths: Array<PathType> = [];
   constructor() {
     super('GameScene');
     this.mazeGraphics = null;
     this.maze= [];
     this.player=null;
-    this.mazeIntersection = [];
   }
 
   preload() {
@@ -134,12 +135,14 @@ export default class GameScene extends Phaser.Scene {
     easystar.setGrid(this.maze);
     easystar.setAcceptableTiles([0]);
     easystar.findPath(1, 1, gameOptions.mazeWidth - 2, gameOptions.mazeHeight - 2, function(path:Array<PathType>){
+      self.paths = path;
       self.player = new Player({
         scene:self,
         x: path[path.length-1].x * gameOptions.tileSize + 15,
         y: path[path.length-1].y * gameOptions.tileSize + 15
       })
       self.drawMaze(posX, posY)
+      self.drawStartFinish()
       // self.drawPath(path, self.player);
     }.bind(this));
     easystar.calculate();
@@ -177,14 +180,14 @@ export default class GameScene extends Phaser.Scene {
             
         } else {
           if(this.mazeIntersection[i][j]) {
-            let txt = this.add.text(j * gameOptions.tileSize + 10, i * gameOptions.tileSize + 10, `${j}`, { color: '#FFFFFF' });
-            txt.setDepth(1)
+            // let txt = this.add.text(j * gameOptions.tileSize + 10, i * gameOptions.tileSize + 10, `${j}`, { color: '#FFFFFF' });
+            // txt.setDepth(1)
             let intersection = this.add.rectangle(
               j * gameOptions.tileSize + 15, 
               i * gameOptions.tileSize + 15, 
               gameOptions.tileSize - 10, 
               gameOptions.tileSize - 10,
-              0xFF0000
+              // 0xFF0000
             ) as any
 
             this.physics.add.existing(intersection);
@@ -196,24 +199,8 @@ export default class GameScene extends Phaser.Scene {
             }
 
             this.physics.add.overlap(this.player! , intersection, (player, intersectionObj) => {
-              // this.player?.handleCollide(wallobj)
-              // console.log(player.body.y)
-              if(this.player!.isHitBoundaries === false) {
-                this.physics.moveToObject(this.player!, intersectionObj, 80, 80)
-                // setTimeout(() => {
-                //   player!.isHitBoundaries = true
-                // }, 200);
-                // setTimeout(() => {
-                //   console.log("wkwkwk")
-                //   // player.body.setImmovable(false)
-                //   player.body.setVelocity(0, 0)
-                // }, 1000);
-              }  
-              // if(Math.ceil(player.body.y)+10 > intersectionObj.body.y || Math.ceil(player.body.x)+10 > intersectionObj.body.x) {
-              //   console.log("lebih")
-              // }
-              
-              // this.player?.handleAutoMove(wallobj.body.y, wallobj.body.x)
+              this.pressKeyboard = true;
+              this.physics.moveToObject(this.player!, intersectionObj, 80, 80)
             })
           }
           // this.add.rectangle(
@@ -256,7 +243,29 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  drawStartFinish() {
+    const pathLength = this.paths.length - 1;
+    this.add.rectangle(
+      this.paths[0].x * gameOptions.tileSize + 15, 
+      this.paths[0].y * gameOptions.tileSize + 15,
+      gameOptions.tileSize - 10, 
+      gameOptions.tileSize - 10,
+      0xFFFFFF
+    ) 
+    this.add.rectangle(
+      this.paths[pathLength].x * gameOptions.tileSize + 15, 
+      this.paths[pathLength].y * gameOptions.tileSize + 15,
+      gameOptions.tileSize - 10, 
+      gameOptions.tileSize - 10,
+      0xFFFFFF
+    ) 
+  }
+
   update(time: number, delta: number): void {
-    this.player?.update(time, delta);
+    if(this.pressKeyboard) {
+      this.player?.update(time, delta, () => {
+        this.pressKeyboard = false
+      });
+    }
   }
 }
