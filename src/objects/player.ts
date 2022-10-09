@@ -8,19 +8,21 @@ type PlayerType = {
 }
 
 class Player extends Phaser.GameObjects.Sprite {  
-  delayTembak: number
+  delayTembak: number = 0;
+  isHitBoundaries: boolean = false;
   constructor(config: PlayerType) {
     const {scene, x, y} = config;
     super(scene, x, y, "flappy-yellow");
-    this.delayTembak = 0
 
     scene.physics.world.enableBody(this);
     scene.add.existing(this)
-    this.displayWidth = 20
+    this.displayWidth = 13
     this.displayHeight = 13
-    if('setSize' in this.body) {
-      this.body.setSize(51,51, true)
-    }
+    this.isHitBoundaries = false
+    
+    // if('setSize' in this.body) {
+    //   this.body.setSize(51,51, true)
+    // }
     // this.setScale(.2)
     this.setDepth(2)
     
