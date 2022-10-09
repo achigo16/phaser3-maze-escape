@@ -10,6 +10,7 @@ import Player from '../objects/player';
 export default class GameScene extends Phaser.Scene {
   mazeGraphics:any;
   maze:any;
+  mazeIntersection:any;
   player:Player | null;
   constructor() {
     super('GameScene');
@@ -88,6 +89,43 @@ export default class GameScene extends Phaser.Scene {
           posY = back! % gameOptions.mazeWidth;
         }
     }
+
+    this.mazeIntersection = this.maze.map((arr: number[], indexArr: number) => {
+      var prevArr = this.maze[indexArr - 1] ?? [];
+      var nextArr = this.maze[indexArr + 1] ?? [];
+
+      return arr.map((arrItem: number, indexArrItem: number) => {
+        var isIntersection = false;
+
+        if(indexArrItem > 0 && indexArrItem < arr.length - 1) {
+          var numPath = 0;
+
+          if((arr[indexArrItem - 1] ?? 1) == 0) {
+            numPath += 1;
+          }
+          if((arr[indexArrItem + 1] ?? 1) == 0) {
+            numPath += 1;
+          }
+          if ((nextArr[indexArrItem] ?? 1) == 0) {
+            numPath += 1;
+          }
+          if ((prevArr[indexArrItem] ?? 1) == 0) {
+            numPath += 1;
+          }
+
+          if(arrItem == 0 && numPath == 3) {
+            // console.log("Intersection Found!", indexArr, indexArrItem)
+            isIntersection = true;
+          }
+        }
+
+        if (isIntersection) {
+          return true;
+        }
+  
+        return false;
+      });
+    });
 
     var easystar = new EasyStar.js();
     const self = this
