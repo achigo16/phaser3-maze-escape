@@ -12,7 +12,7 @@ class Player extends Phaser.GameObjects.Sprite {
   isHitBoundaries: boolean = false;
   constructor(config: PlayerType) {
     const {scene, x, y} = config;
-    super(scene, x, y, "flappy-yellow");
+    super(scene, x, y, "box");
 
     scene.physics.world.enableBody(this);
     scene.add.existing(this)
