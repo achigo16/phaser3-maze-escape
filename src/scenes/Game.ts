@@ -25,6 +25,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('logo', 'assets/phaser3-logo.png');
     // this.load.image('flappy-yellow', 'assets/flappy-yellow.png');
     this.load.image('box', 'assets/rect-yellow.png');
+    this.load.image('red', 'https://labs.phaser.io/assets/particles/yellow.png');
   }
 
   create(){
@@ -130,7 +131,14 @@ export default class GameScene extends Phaser.Scene {
       });
     });
 
-    var easystar = new EasyStar.js();
+    this.cameras.main.setBounds(
+      0,0,
+      this.physics.world.bounds.width, 
+      this.physics.world.bounds.height
+    )
+    // .setZoom(10)
+
+    const easystar = new EasyStar.js();
     const self = this
     easystar.setGrid(this.maze);
     easystar.setAcceptableTiles([0]);
@@ -141,9 +149,10 @@ export default class GameScene extends Phaser.Scene {
         x: path[path.length-1].x * gameOptions.tileSize + 15,
         y: path[path.length-1].y * gameOptions.tileSize + 15
       })
+      self.cameras.main.startFollow(self.player);
       self.drawMaze(posX, posY)
       self.drawStartFinish()
-      // self.drawPath(path, self.player);
+      // self.drawPath(path);
     }.bind(this));
     easystar.calculate();
 
@@ -215,11 +224,11 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  drawPath(path:Array<PathType>, player:any){
+  drawPath(path:Array<PathType>){
     var i = path.length-1;
     const self = this
     this.time.addEvent({
-      delay: 5,
+      delay: 1,
       callback: function(){
         if(i > -1){
           self.mazeGraphics.fillStyle(0x00FFDD);
@@ -228,10 +237,10 @@ export default class GameScene extends Phaser.Scene {
             path[i].y * gameOptions.tileSize + 15, 
             gameOptions.tileSize, 
             gameOptions.tileSize,
-            0x00FFDD
+            // 0x00FFDD
           );
           
-          // self.player?.handleAutoMove(path[i].x * gameOptions.tileSize + 15, path[i].y * gameOptions.tileSize + 15)
+          self.player?.handleAutoMove(path[i].x * gameOptions.tileSize + 15, path[i].y * gameOptions.tileSize + 15)
           i--;
         }
         else{

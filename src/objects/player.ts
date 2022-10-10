@@ -16,8 +16,8 @@ class Player extends Phaser.GameObjects.Sprite {
 
     scene.physics.world.enableBody(this);
     scene.add.existing(this)
-    this.displayWidth = 13
-    this.displayHeight = 13
+    this.displayWidth = 27
+    this.displayHeight = 27
     this.isHitBoundaries = false
     
     // if('setSize' in this.body) {
@@ -25,7 +25,7 @@ class Player extends Phaser.GameObjects.Sprite {
     // }
     // this.setScale(.2)
     this.setDepth(2)
-    
+    this.setParticle()
     if('setVelocity' in this.body) {
       this.body.setCollideWorldBounds(true);
       this.body.setImmovable(true)
@@ -42,9 +42,30 @@ class Player extends Phaser.GameObjects.Sprite {
     this.setPosition(x, y)
   }
 
+  setParticle() {
+    let emmiter:any;
+    let particles:any;
+    if(emmiter) {
+      emmiter.stop()
+      // particles.destroy()
+    }
+  
+    particles = this.scene.add.particles("red");
+    emmiter = particles.createEmitter({
+      speed: 10,
+      scale: { start: .2, end: 0 },
+      blendMode: "ADD"
+    });
+    emmiter.startFollow(this);
+  
+    // this.scene.time.delayedCall(1000, function() {
+    //   emmiter.stop()
+    // });
+  }
+
   update(time: number, delta: number, callback:Function): void {
     const {keys} = gameConfig
-
+    
     if('setVelocity' in this.body) {
     // this.body.setVelocity(0,0)
     if(keys.a.isDown) {
@@ -68,20 +89,6 @@ class Player extends Phaser.GameObjects.Sprite {
         callback()
       }
     }
-
-    // if(keys.space.isDown) {
-    //   let fireBullet = null
-    //   if("x" in this.body) {
-    //     this.delayTembak += delta
-    //     if(this.delayTembak > 200) {
-    //       fireBullet = new Bullet({scene: this.scene, x: this.body.x, y: this.body.y})
-          
-    //       fireBullet.setCollider(fireBullet)
-    //       this.delayTembak = 0
-    //     }
-    //   }
-      
-    // }
   }
 }
 
